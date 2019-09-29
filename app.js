@@ -7,18 +7,40 @@ var budgetController = (function() {
 
 // UI CONTROLLER
 var UIController = (function() {
+    // Store HTML classes in object
+    var DOMstrings = {
+        inputType: '.add__type',
+        inputDescription: '.add__description',
+        inputValue: '.add__value',
+        inputBtn: '.add__btn'
+    };
     
-    // Some code
+    return {
+        getInput: function() {
+            return {
+                type: document.querySelector(DOMstrings.inputType).value, // inc or exp
+                description: document.querySelector(DOMstrings.inputDescription).value,
+                value: document.querySelector(DOMstrings.inputValue).value
+            }  
+        },
+        // exposes private variable to public
+        getDOMstrings: function() {
+            return DOMstrings;
+        }
+    };
 
 })();
 
 // GLOBAL APP CONTROLLER
 // controls what happens based on events
 var controller = (function(budgetCtrl, UICtrl) {
+    // DOM variable has access to UIController's DOMstring variable
+    var DOM = UICtrl.getDOMstrings();
 
     var ctrlAddItem = function () {
         // 1. Get the field input data
-
+        var input = UICtrl.getInput();
+        console.log(input);
         // 2. Add item to the budget controller
 
         // 3. Add item to the UI
@@ -27,11 +49,10 @@ var controller = (function(budgetCtrl, UICtrl) {
 
         // 5. Display budget on the UI
 
-        console.log('It works');
     }
 
     //Add button event listener
-    document.querySelector('.add__btn').addEventListener('click', ctrlAddItem);
+    document.querySelector(DOM.inputBtn).addEventListener('click', ctrlAddItem);
 
     // Enter key press event listener
     document.addEventListener('keypress', function(event) {
