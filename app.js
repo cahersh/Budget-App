@@ -147,6 +147,7 @@ var UIController = (function() {
             }  
         },
 
+        // Adds income/expense to the DOM
         addListItem: function(obj, type) {
             // Variable Declarations
             var html, newHtml, element;
@@ -168,6 +169,13 @@ var UIController = (function() {
 
             // Insert the HTML into the DOM
             document.querySelector(element).insertAdjacentHTML('beforeend', newHtml);
+        },
+
+        // Removes income/expense from the DOM
+        deleteListItem: function(selectorID) {
+            
+            var el = document.getElementById(selectorID); // el = income/expense id to remove
+            el.parentNode.removeChild(el); // Move to parent and remove child
         },
 
         // Clears input fields once item is added
@@ -280,8 +288,10 @@ var controller = (function(budgetCtrl, UICtrl) {
         budgetCtrl.deleteItem(type, ID);
 
         // 2. Delete the item from the UI
+        UICtrl.deleteListItem(itemID);
 
-        // 3. Update and show the new budget
+        // 3. Calculate and update budget
+        updateBudget();
 
     }
 
