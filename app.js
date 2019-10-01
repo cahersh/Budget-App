@@ -194,6 +194,13 @@ var UIController = (function() {
         // + or - before number
         return (type === 'exp' ? '-' : '+') + ' ' + int + '.' + dec;
     };
+
+    // forEach function for node list
+    var nodeListForEach = function(list, callback) {
+        for (var i = 0; i <list.length; i++) {
+            callback(list[i], i);
+        }
+    };
     
     return {
         getInput: function() {
@@ -276,13 +283,6 @@ var UIController = (function() {
             var fields;
             fields = document.querySelectorAll(DOMstrings.expensesPercLabel);
 
-            // forEach function for node list
-            var nodeListForEach = function(list, callback) {
-                for (var i = 0; i <list.length; i++) {
-                    callback(list[i], i);
-                }
-            };
-
             nodeListForEach(fields, function(current, index) {
                 if(percentages[index] > 0) {
                     current.textContent = percentages[index] + '%';
@@ -303,6 +303,21 @@ var UIController = (function() {
             year = now.getFullYear();
             month = now.getMonth();
             document.querySelector(DOMstrings.dateLabel).textContent = months[month] + ' ' + year; 
+        },
+
+        // Changes active input display to red when expense
+        changedType: function() {
+            var fields = document.querySelectorAll(
+                DOMstrings.inputType + ',' +
+                DOMstrings.inputDescription + ',' +
+                DOMstrings.inputValue
+            );
+
+            nodeListForEach(fields, function(cur) {
+                cur.classList.toggle('red-focus');
+            });
+
+            document.querySelector(DOMstrings.inputBtn).classList.toggle('red');
         },
 
         // exposes private variable to public
@@ -334,7 +349,10 @@ var controller = (function(budgetCtrl, UICtrl) {
         });
 
         // Event listener for deleting income/expense - using event delegation
-        document.querySelector(DOM.container).addEventListener('click', ctrlDeleteItem)
+        document.querySelector(DOM.container).addEventListener('click', ctrlDeleteItem);
+
+        // Event listener for changing between + and -
+        document.querySelector(DOM.inputType).addEventListener('change', UICtrl.changedType);
     };
 
     var updatePercentages = function() {
